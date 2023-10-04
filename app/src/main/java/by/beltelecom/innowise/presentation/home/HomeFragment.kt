@@ -1,6 +1,7 @@
 package by.beltelecom.innowise.presentation.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,11 @@ import by.beltelecom.innowise.MainActivity
 import by.beltelecom.innowise.R
 import by.beltelecom.innowise.databinding.FragmentHomeBinding
 import by.beltelecom.innowise.domain.entities.CollectionDomain
+import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.presentation.PhotosAdapter
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.Observable
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
@@ -138,12 +141,12 @@ class HomeFragment : Fragment() {
                         if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                             && firstVisibleItemPosition >= 0
                         ) {
+                            Log.d("recycler", "load")
                             viewModel.loadMore()
                         }
                     }
                 }
             }
-
         )
     }
 
