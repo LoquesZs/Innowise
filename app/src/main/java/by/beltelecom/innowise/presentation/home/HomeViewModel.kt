@@ -28,8 +28,8 @@ class HomeViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val publish = PublishSubject.create<Boolean>()
-    private val debounceObservable: Observable<Boolean> = publish.debounce(1, TimeUnit.SECONDS)
+    private val requestPublisher = PublishSubject.create<Unit>()
+    private val pagingRequestsObservable: Observable<Unit> = requestPublisher.debounce(1, TimeUnit.SECONDS)
 
     override fun onCleared() {
         super.onCleared()
@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getCollections()
-        pagingObserver()
+        observePagingRequests()
     }
 
     fun getPopular(page: Int = 1) {
@@ -126,11 +126,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadMore() {
-        publish.onNext(true)
+        requestPublisher.onNext(Unit)
     }
 
-    private fun pagingObserver() {
-        val result = debounceObservable.subscribe(
+    private fun observePagingRequests() {
+        val result = pagingRequestsObservable.subscribe(
             {
                 when (val localState = state.value) {
                     is HomeUIState.Success -> {
