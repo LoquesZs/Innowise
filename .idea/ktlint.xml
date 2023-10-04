@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="KtlintProjectConfiguration">
+    <androidMode>true</androidMode>
+    <useExperimental>true</useExperimental>
+    <treatAsErrors>false</treatAsErrors>
+    <disabledRules>
+      <list>
+        <option value="&quot;chain-wrapping&quot;" />
+        <option value="&quot;final-newline&quot;" />
+        <option value="&quot;import-ordering&quot;" />
+        <option value="max-line-length" />
+        <option value="filename" />
+        <option value="filename" />
+        <option value="final-newline" />
+        <option value="filename" />
+      </list>
+    </disabledRules>
+  </component>
+</project>

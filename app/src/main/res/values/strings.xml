@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Innowise</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_bar_hint">Search</string>
+    <string name="download">Download</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks_empty_stub">You haven\'t saved anything yet</string>
+    <string name="explore">Explore</string>
+    <string name="try_again">Try again</string>
+    <string name="image_not_found">Image not found</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="home_fragment_label" translatable="false">Home Fragment</string>
+    <string name="bookmark_fragment_label" translatable="false">Bookmark Fragment</string>
+    <string name="home" translatable="false">Home</string>
+    <string name="bookmark" translatable="false">Bookmark</string>
+    <string name="download_error">Download error</string>
+    <string name="image_saved_successfully">Image saved successfully</string>
+    <string name="photo_not_found">Photo not found</string>
+</resources>

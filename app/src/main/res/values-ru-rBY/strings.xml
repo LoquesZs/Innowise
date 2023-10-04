@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Innowise</string>
+    <string name="action_settings">Настройки</string>
+    <string name="search_bar_hint">Поиск</string>
+    <string name="download">Скачать</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="bookmarks_empty_stub">Вы ещё ничего не сохранили</string>
+    <string name="explore">Обзор</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="image_not_found">Картинка не найдена</string>
+    <string name="download_error">Ошибка скачивания</string>
+    <string name="image_saved_successfully">Скачивание завершено</string>
+    <string name="photo_not_found">Фото не найдено</string>
+</resources>
