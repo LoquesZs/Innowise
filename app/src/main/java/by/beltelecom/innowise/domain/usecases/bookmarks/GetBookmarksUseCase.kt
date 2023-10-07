@@ -1,5 +1,6 @@
 package by.beltelecom.innowise.domain.usecases.bookmarks
 
+import androidx.paging.PagingData
 import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.domain.repository.BookmarksRepository
 import io.reactivex.Flowable
@@ -9,7 +10,7 @@ class GetBookmarksUseCase @Inject constructor(
     private val repository: BookmarksRepository
 ) {
 
-    operator fun invoke(): Flowable<List<Photo>> {
+    operator fun invoke(): Flowable<PagingData<Photo>> {
         return repository.getBookmarks()
     }
 }

@@ -1,14 +1,12 @@
 package by.beltelecom.innowise.presentation.bookmark
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import by.beltelecom.innowise.databinding.FragmentBookmarksBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,10 +66,10 @@ class BookmarksFragment : Fragment() {
         binding.bookmarks.adapter = adapter
 
         viewModel.bookmarks.observe(viewLifecycleOwner) { photos ->
-            if (photos.isNotEmpty()) {
+            adapter.submitData(lifecycle, photos)
+            if (adapter.snapshot().isNotEmpty()) {
                 binding.emptyStub.visibility = View.GONE
                 binding.bookmarks.visibility = View.VISIBLE
-                adapter.submitList(photos)
             } else {
                 binding.emptyStub.visibility = View.VISIBLE
                 binding.bookmarks.visibility = View.GONE

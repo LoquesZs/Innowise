@@ -1,6 +1,5 @@
 package by.beltelecom.innowise.data
 
-import android.util.Log
 import by.beltelecom.innowise.common.database.dao.BookmarksDao
 import by.beltelecom.innowise.common.database.dao.DetailDao
 import by.beltelecom.innowise.common.network.PexelsApiService

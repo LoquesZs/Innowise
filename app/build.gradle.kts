@@ -89,6 +89,7 @@ dependencies {
 
     implementation(libs.room.runtime)
     implementation(libs.room.rxjava2)
+    implementation(libs.room.rxjava2.paging)
     ksp(libs.room.compiler)
 
     implementation(libs.shimmer)

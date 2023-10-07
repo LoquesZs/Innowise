@@ -1,8 +1,10 @@
 package by.beltelecom.innowise.presentation.bookmark
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
 import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.domain.usecases.bookmarks.GetBookmarksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,11 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
-    getBookmarksUseCase: GetBookmarksUseCase,
+    private val getBookmarksUseCase: GetBookmarksUseCase
 ) : ViewModel() {
 
-    private val _bookmarks by lazy { MutableLiveData<List<Photo>>() }
-    val bookmarks: LiveData<List<Photo>>
+    private val _bookmarks by lazy { MutableLiveData<PagingData<Photo>>() }
+    val bookmarks: LiveData<PagingData<Photo>>
         get() = _bookmarks
 
     private val _loading by lazy { MutableLiveData(true) }
@@ -31,8 +33,13 @@ class BookmarkViewModel @Inject constructor(
     }
 
     init {
+        getBookmarks()
+    }
+
+    private fun getBookmarks() {
         getBookmarksUseCase()
             .subscribe { photos ->
+                Log.d("Viewmodel", "photos: $photos")
                 _loading.postValue(false)
                 _bookmarks.postValue(photos)
             }.addTo(compositeDisposable)
