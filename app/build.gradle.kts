@@ -62,6 +62,7 @@ dependencies {
 
     implementation(libs.rxjava2)
     implementation(libs.rxandroid)
+    implementation(libs.rxkotlin)
 
     implementation(libs.retrofit2.runtime)
     implementation(libs.retrofit2.scalar.converter)
@@ -89,6 +90,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.rxjava2)
     ksp(libs.room.compiler)
+
+    implementation(libs.shimmer)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

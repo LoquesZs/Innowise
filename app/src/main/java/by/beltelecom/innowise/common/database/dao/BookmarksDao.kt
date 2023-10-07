@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import by.beltelecom.innowise.common.database.entities.PhotoEntity
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -18,8 +19,8 @@ interface BookmarksDao {
     fun getBookmarks(): Flowable<List<PhotoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addBookmark(photoEntity: PhotoEntity): Long
+    fun addBookmark(photoEntity: PhotoEntity): Completable
 
     @Delete
-    fun removeBookmark(photoEntity: PhotoEntity): Int
+    fun removeBookmark(photoEntity: PhotoEntity): Completable
 }

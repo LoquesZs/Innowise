@@ -3,6 +3,7 @@ package by.beltelecom.innowise.common.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import by.beltelecom.innowise.common.database.entities.PhotoEntity
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -13,5 +14,5 @@ interface DetailDao {
     fun getPhoto(id: Long): Single<PhotoEntity>
 
     @Query("SELECT EXISTS(SELECT 1 FROM ${PhotoEntity.TABLE_NAME} WHERE ${PhotoEntity.COLUMN_ID} = :id)")
-    fun getBookmarkState(id: Long): Observable<Boolean>
+    fun getBookmarkState(id: Long): Flowable<Boolean>
 }

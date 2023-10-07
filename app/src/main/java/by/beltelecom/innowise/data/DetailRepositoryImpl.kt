@@ -6,7 +6,8 @@ import by.beltelecom.innowise.common.database.dao.DetailDao
 import by.beltelecom.innowise.common.network.PexelsApiService
 import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.domain.repository.DetailRepository
-import io.reactivex.Observable
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +23,6 @@ class DetailRepositoryImpl @Inject constructor(
         return detailDao.getPhoto(id)
             .map { entity -> entity.toDomain() }
             .onErrorReturn { throwable ->
-                Log.d("RxJava", throwable.message.toString())
                 pexelsApiService.getPhotoByID(id)
                     .map { model -> model.toDomain() }
                     .blockingGet()
@@ -31,23 +31,19 @@ class DetailRepositoryImpl @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun addBookmark(photo: Photo): Single<Long> {
-        return Single
-            .fromCallable {
-                bookmarksDao.addBookmark(photo.toEntity())
-            }.subscribeOn(Schedulers.io())
+    override fun addBookmark(photo: Photo): Completable {
+        return bookmarksDao.addBookmark(photo.toEntity())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun removeBookmark(photo: Photo): Single<Int> {
-        return Single
-            .fromCallable {
-                bookmarksDao.removeBookmark(photo.toEntity())
-            }.subscribeOn(Schedulers.io())
+    override fun removeBookmark(photo: Photo): Completable {
+        return bookmarksDao.removeBookmark(photo.toEntity())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getBookmarkState(id: Long): Observable<Boolean> {
+    override fun getBookmarkState(id: Long): Flowable<Boolean> {
         return detailDao
             .getBookmarkState(id)
             .subscribeOn(Schedulers.io())

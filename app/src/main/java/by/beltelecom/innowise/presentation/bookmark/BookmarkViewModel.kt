@@ -7,6 +7,7 @@ import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.domain.usecases.bookmarks.GetBookmarksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,11 +31,10 @@ class BookmarkViewModel @Inject constructor(
     }
 
     init {
-        val result = getBookmarksUseCase()
+        getBookmarksUseCase()
             .subscribe { photos ->
                 _loading.postValue(false)
                 _bookmarks.postValue(photos)
-            }
-        compositeDisposable.add(result)
+            }.addTo(compositeDisposable)
     }
 }

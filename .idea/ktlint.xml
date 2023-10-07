@@ -14,6 +14,9 @@
         <option value="filename" />
         <option value="final-newline" />
         <option value="filename" />
+        <option value="argument-list-wrapping" />
+        <option value="argument-list-wrapping" />
+        <option value="argument-list-wrapping" />
       </list>
     </disabledRules>
   </component>

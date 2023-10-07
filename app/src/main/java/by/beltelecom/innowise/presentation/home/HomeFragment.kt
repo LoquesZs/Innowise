@@ -1,7 +1,6 @@
 package by.beltelecom.innowise.presentation.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,9 @@ import by.beltelecom.innowise.MainActivity
 import by.beltelecom.innowise.R
 import by.beltelecom.innowise.databinding.FragmentHomeBinding
 import by.beltelecom.innowise.domain.entities.CollectionDomain
-import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.presentation.PhotosAdapter
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.Observable
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
@@ -48,8 +45,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         chipsController = CollectionChipsController()
-
-        setupSearchBar()
 
         setupRecyclerView()
 
@@ -81,6 +76,7 @@ class HomeFragment : Fragment() {
                         binding.chipGroup.visibility = View.GONE
                     } else {
                         binding.progressIndicator.visibility = View.INVISIBLE
+                        binding.shimmer.root.visibility = View.GONE
                         binding.recyclerView.visibility = View.INVISIBLE
                         binding.emptyStub.root.visibility = View.GONE
                         binding.networkStub.root.visibility = View.VISIBLE
@@ -89,6 +85,7 @@ class HomeFragment : Fragment() {
 
                 is HomeUIState.Loading -> {
                     binding.progressIndicator.visibility = View.VISIBLE
+                    binding.shimmer.root.visibility = View.VISIBLE
                 }
 
                 is HomeUIState.Success -> {
@@ -97,6 +94,7 @@ class HomeFragment : Fragment() {
                         (activity as MainActivity).removeSplashScreen()
                     }
                     binding.progressIndicator.visibility = View.INVISIBLE
+                    binding.shimmer.root.visibility = View.GONE
                     if (binding.networkStub.root.visibility == View.VISIBLE) binding.networkStub.root.visibility = View.GONE
 
                     if (state.photos?.isEmpty() == true) {
@@ -111,6 +109,11 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupSearchBar()
     }
 
     private fun setupRecyclerView() {
@@ -138,10 +141,9 @@ class HomeFragment : Fragment() {
                         (recyclerView.layoutManager as StaggeredGridLayoutManager).findFirstVisibleItemPositions(null)
                     firstVisibleItemPosition = firstVisibleItemPositions[0]
                     if (viewModel.state.value !is HomeUIState.Loading) {
-                        if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
-                            && firstVisibleItemPosition >= 0
+                        if (visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
+                            firstVisibleItemPosition >= 0
                         ) {
-                            Log.d("recycler", "load")
                             viewModel.loadMore()
                         }
                     }

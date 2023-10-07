@@ -1,25 +1,22 @@
 package by.beltelecom.innowise.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import by.beltelecom.innowise.domain.entities.Photo
 import by.beltelecom.innowise.domain.usecases.detail.AddToBookmarksUseCase
-import by.beltelecom.innowise.domain.usecases.detail.GetBookmarkStateUseCase
 import by.beltelecom.innowise.domain.usecases.detail.GetPhotoUseCase
 import by.beltelecom.innowise.domain.usecases.detail.RemoveFromBookmarksUseCase
+import by.beltelecom.innowise.domain.usecases.detail.SubscribeToBookmarkStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.addTo
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getPhotoUseCase: GetPhotoUseCase,
-    private val getBookmarkStateUseCase: GetBookmarkStateUseCase,
+    private val subscribeToBookmarkStateUseCase: SubscribeToBookmarkStateUseCase,
     private val addToBookmarksUseCase: AddToBookmarksUseCase,
     private val removeFromBookmarksUseCase: RemoveFromBookmarksUseCase
 ) : ViewModel() {
@@ -50,7 +47,7 @@ class DetailViewModel @Inject constructor(
     fun setID(id: Long) {
         _loading.postValue(true)
         getBookmarkState(id)
-        val photoResult = getPhotoUseCase(id)
+        getPhotoUseCase(id)
             .subscribe(
                 {
                     _loading.postValue(false)
@@ -59,43 +56,35 @@ class DetailViewModel @Inject constructor(
                 {
                     _error.postValue(true)
                 }
-            )
-        compositeDisposable.add(photoResult)
+            ).addTo(compositeDisposable)
     }
 
     fun addToBookmarks() {
         _photo.value?.let { photo ->
-            val result = addToBookmarksUseCase(photo)
+            addToBookmarksUseCase(photo)
                 .subscribe(
-                    {
-                        _bookmark.postValue(true)
-                    },
+                    {},
                     {
                         it.printStackTrace()
                     }
-                )
-
-            compositeDisposable.add(result)
+                ).addTo(compositeDisposable)
         }
     }
 
     fun removeFromBookmarks() {
         _photo.value?.let { photo ->
-            val result = removeFromBookmarksUseCase(photo)
+            removeFromBookmarksUseCase(photo)
                 .subscribe(
-                    {
-                        if (it > 0) _bookmark.postValue(false)
-                    },
+                    {},
                     {
                         it.printStackTrace()
                     }
-                )
-            compositeDisposable.add(result)
+                ).addTo(compositeDisposable)
         }
     }
 
     private fun getBookmarkState(id: Long) {
-        val result = getBookmarkStateUseCase(id)
+        subscribeToBookmarkStateUseCase(id)
             .subscribe(
                 {
                     _bookmark.postValue(it)
@@ -103,8 +92,6 @@ class DetailViewModel @Inject constructor(
                 {
                     it.printStackTrace()
                 }
-            )
-
-        compositeDisposable.add(result)
+            ).addTo(compositeDisposable)
     }
 }

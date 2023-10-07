@@ -41,6 +41,7 @@ class BookmarksFragment : Fragment() {
 
         viewModel.loading.observe(viewLifecycleOwner) {
             binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+            binding.shimmer.root.visibility = if (it) View.VISIBLE else View.INVISIBLE
         }
 
         binding.explore.setOnClickListener {

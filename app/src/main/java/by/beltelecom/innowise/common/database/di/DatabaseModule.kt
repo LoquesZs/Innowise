@@ -5,7 +5,6 @@ import androidx.room.Room
 import by.beltelecom.innowise.common.database.PhotoDatabase
 import by.beltelecom.innowise.common.database.dao.BookmarksDao
 import by.beltelecom.innowise.common.database.dao.DetailDao
-import by.beltelecom.innowise.common.database.dao.HomeDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +25,6 @@ object DatabaseModule {
             PhotoDatabase.DATABASE_NAME
         ).build()
     }
-
-    @Provides
-    @Singleton
-    fun provideHomeDao(db: PhotoDatabase): HomeDao = db.homeDao
 
     @Provides
     @Singleton

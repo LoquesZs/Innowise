@@ -1,5 +1,6 @@
 package by.beltelecom.innowise.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import by.beltelecom.innowise.domain.usecases.home.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -42,7 +44,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getPopular(page: Int = 1) {
-        val result = getPopularUseCase(page)
+        getPopularUseCase(page)
             .doOnSubscribe {
                 _state.setValue(
                     HomeUIState.Loading(
@@ -66,12 +68,11 @@ class HomeViewModel @Inject constructor(
                 {
                     _state.value = HomeUIState.Error(Source.Featured)
                 }
-            )
-        compositeDisposable.add(result)
+            ).addTo(compositeDisposable)
     }
 
     private fun getCollections() {
-        val result = getCollectionsUseCase()
+        getCollectionsUseCase()
             .doOnSubscribe { _state.setValue(HomeUIState.Loading(Source.Collections)) }
             .subscribe(
                 {
@@ -87,12 +88,11 @@ class HomeViewModel @Inject constructor(
                 {
                     _state.setValue(HomeUIState.Error(Source.Collections))
                 }
-            )
-        compositeDisposable.add(result)
+            ).addTo(compositeDisposable)
     }
 
     fun search(query: String, page: Int = 1) {
-        val result = searchUseCase(query, page)
+        searchUseCase(query, page)
             .doOnSubscribe {
                 _state.setValue(
                     HomeUIState.Loading(
@@ -121,8 +121,7 @@ class HomeViewModel @Inject constructor(
                         )
                     )
                 }
-            )
-        compositeDisposable.add(result)
+            ).addTo(compositeDisposable)
     }
 
     fun loadMore() {
@@ -130,50 +129,51 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun observePagingRequests() {
-        val result = pagingRequestsObservable.subscribe(
+        pagingRequestsObservable.subscribe(
             {
                 when (val localState = state.value) {
                     is HomeUIState.Success -> {
                         when (localState.source) {
                             is Source.Featured -> {
-                                val result = getPopularUseCase(page = localState.page + 1).subscribe(
-                                    {
-                                        _state.setValue(
-                                            HomeUIState.Success(
-                                                source = Source.Featured,
-                                                collections = state.value?.collections,
-                                                page = it.page,
-                                                total = it.total,
-                                                photos = localState.photos?.plus(it.photos)
+                                getPopularUseCase(page = localState.page + 1)
+                                    .subscribe(
+                                        {
+                                            _state.setValue(
+                                                HomeUIState.Success(
+                                                    source = Source.Featured,
+                                                    collections = state.value?.collections,
+                                                    page = it.page,
+                                                    total = it.total,
+                                                    photos = localState.photos?.plus(it.photos)
+                                                )
                                             )
-                                        )
-                                    },
-                                    {
-                                        _state.value = HomeUIState.Error(Source.Featured)
-                                    }
-                                )
-                                compositeDisposable.add(result)
+                                        },
+                                        {
+                                            _state.value = HomeUIState.Error(Source.Featured)
+                                        }
+                                    ).addTo(compositeDisposable)
                             }
 
                             is Source.Search -> {
-                                val result = searchUseCase(localState.source.query, localState.page + 1).subscribe(
-                                    {
-                                        _state.setValue(
-                                            HomeUIState.Success(
-                                                source = Source.Search(query = localState.source.query),
-                                                collections = state.value?.collections,
-                                                page = it.page,
-                                                total = it.total,
-                                                photos = localState.photos?.plus(it.photos)
+                                searchUseCase(localState.source.query, localState.page + 1)
+                                    .subscribe(
+                                        {
+                                            _state.setValue(
+                                                HomeUIState.Success(
+                                                    source = Source.Search(query = localState.source.query),
+                                                    collections = state.value?.collections,
+                                                    page = it.page,
+                                                    total = it.total,
+                                                    photos = localState.photos?.plus(it.photos)
+                                                )
                                             )
-                                        )
-                                    },
-                                    {
-                                        _state.value = HomeUIState.Error(Source.Search(query = localState.source.query))
-                                    }
-                                )
-                                compositeDisposable.add(result)
+                                        },
+                                        {
+                                            _state.value = HomeUIState.Error(Source.Search(query = localState.source.query))
+                                        }
+                                    ).addTo(compositeDisposable)
                             }
+
                             else -> {}
                         }
                     }
@@ -181,10 +181,9 @@ class HomeViewModel @Inject constructor(
                     else -> {}
                 }
             },
-            {
-                _state.value = state.value?.source?.let { it1 -> HomeUIState.Error(source = it1) }
+            { throwable ->
+                _state.value = state.value?.source?.let { source -> HomeUIState.Error(source = source) }
             }
-        )
-        compositeDisposable.add(result)
+        ).addTo(compositeDisposable)
     }
 }
