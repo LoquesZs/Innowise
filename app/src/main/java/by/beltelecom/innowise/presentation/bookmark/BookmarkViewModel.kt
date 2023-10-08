@@ -38,10 +38,10 @@ class BookmarkViewModel @Inject constructor(
 
     private fun getBookmarks() {
         getBookmarksUseCase()
-            .subscribe { photos ->
+            .subscribe( { photos ->
                 Log.d("Viewmodel", "photos: $photos")
                 _loading.postValue(false)
                 _bookmarks.postValue(photos)
-            }.addTo(compositeDisposable)
+            }, {}).addTo(compositeDisposable)
     }
 }
