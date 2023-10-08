@@ -1,16 +1,21 @@
 package by.beltelecom.innowise
 
 import android.os.Bundle
+import android.os.WorkSource
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import by.beltelecom.innowise.common.workmanager.CacheClearWorker
 import by.beltelecom.innowise.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
@@ -74,5 +79,17 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
                 binding.bottomNavigation.selectedItemId = R.id.bookmark
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val clearCacheRequest = OneTimeWorkRequestBuilder<CacheClearWorker>()
+            .setInitialDelay(1, TimeUnit.HOURS)
+            .build()
+
+        WorkManager
+            .getInstance(applicationContext)
+            .beginUniqueWork("clearing caches", ExistingWorkPolicy.REPLACE, clearCacheRequest)
+            .enqueue()
     }
 }

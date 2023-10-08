@@ -19,8 +19,8 @@ class RetrofitClientFactory(context: Context) {
         private const val BASE_URL = "https://api.pexels.com/v1/"
         private const val API_KEY = "x6KxgBmLdoDjkYEgQx86eWbnQXtEbAIyKobVDq9QUwhZYEdi7F5sU1M4"
 
-        private const val CACHE_NAME = "http_cache"
-        private const val CACHE_MAX_SIZE = 50L * 1024L * 1024L
+        const val CACHE_NAME = "http_cache"
+        const val CACHE_MAX_SIZE = 50L * 1024L * 1024L
     }
 
     private object AuthorizationHeaderInterceptor : Interceptor {

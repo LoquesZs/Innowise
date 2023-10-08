@@ -94,6 +94,9 @@ dependencies {
 
     implementation(libs.shimmer)
 
+    implementation(libs.work.manager)
+    implementation(libs.work.manager.rx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
